@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tailwind Countdown Timer</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body class="bg-blue-950 flex flex-col items-center justify-center min-h-screen p-4">
+        
+        <div id="container" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center">
+            <h1 class="text-2xl font-bold mb-6 text-gray-800">Set Timer</h1>
+            
+            <!-- Input Fields -->
+            <div class="flex gap-2 justify-center mb-6">
+                <input type="number" id="hours" placeholder="HH" min="0" max="99" class="w-16 p-3 border rounded-lg text-center font-mono text-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                <input type="number" id="mins" placeholder="MM" min="0" max="59" class="w-16 p-3 border rounded-lg text-center font-mono text-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                <input type="number" id="secs" placeholder="SS" min="0" max="59" class="w-16 p-3 border rounded-lg text-center font-mono text-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+            </div>
+
+                <!-- Display Area -->
+            <div id="display" class="mt-8 text-4xl font-mono font-bold text-gray-900 hidden">
+                <span id="dHours">00</span>:<span id="dMins">00</span>:<span id="dSecs">00</span>
+            </div>
+
+
+            <div class="grid grid-cols-3 gap-4">
+            <!-- Start Button -->
+            <button id="startBtn" class="mt-9 w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-150">
+                Start Timer
+            </button>
+
+             <button id="stopBtn" class=" mt-9 w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition duration-150 ">
+                Stop Timer
+            </button>
+
+            <button id="resetBtn" class=" mt-9 w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-150 ">
+                Reset
+            </button>
+
+            </div>
+
+        
+
+              
+
+    </div>
+
+    <script>
+
+        let countdownInterval;
+
+        document.getElementById('startBtn').addEventListener('click', function() {
+            // Get input values
+            let h = parseInt(document.getElementById('hours').value) || 0;
+            let m = parseInt(document.getElementById('mins').value) || 0;
+            let s = parseInt(document.getElementById('secs').value) || 0;
+
+            // Convert to total seconds
+            let totalSeconds = (h * 3600) + (m * 60) + s;
+
+            if (totalSeconds <= 0) return alert("Please enter a valid time");
+
+            // Hide inputs, show display
+            document.querySelector('.gap-2').classList.add('hidden');
+            document.getElementById('display').classList.remove('hidden');
+            document.getElementById('stopBtn').classList.remove('hidden');
+
+            // Update display immediately
+            updateDisplay(totalSeconds);
+
+            // Start Timer
+            clearInterval(countdownInterval);
+            // Ensure container starts in default state
+            const container = document.getElementById('container');
+            container.classList.remove('bg-yellow-400', 'bg-red-600', 'animate-pulse');
+            container.classList.add('bg-white');
+            countdownInterval = setInterval(() => {
+                totalSeconds--;
+                updateDisplay(totalSeconds);
+
+                // Change background when remaining equals exactly 2 minutes (120 seconds)
+                if (totalSeconds === 120) {
+                    // Enter warning state (yellow)
+                    container.classList.remove('bg-red-600', 'animate-pulse');
+                    container.classList.add('bg-yellow-400');
+                }
+
+                if (totalSeconds === 60) {
+                    // Enter urgent state (red + pulse)
+                    container.classList.remove('bg-white', 'bg-yellow-400');
+                    container.classList.add('bg-red-600');
+                    container.classList.add('animate-pulse');
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    alert("Time's up!");
+                    resetUI();
+                }
+            }, 1000);
+        });
+
+        document.getElementById('stopBtn').addEventListener('click', function() {
+            clearInterval(countdownInterval);
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            clearInterval(countdownInterval);
+            resetUI();
+        });
+
+        function updateDisplay(total) {
+            let h = Math.floor(total / 3600);
+            let m = Math.floor((total % 3600) / 60);
+            let s = total % 60;
+
+            document.getElementById('dHours').textContent = String(h).padStart(2, '0');
+            document.getElementById('dMins').textContent = String(m).padStart(2, '0');
+            document.getElementById('dSecs').textContent = String(s).padStart(2, '0');
+        }
+
+        function resetUI() {
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.querySelector('.gap-2').classList.remove('hidden');
+            document.getElementById('display').classList.add('hidden');
+            // Restore container classes to default
+            const container = document.getElementById('container');
+            container.classList.remove('bg-yellow-400', 'bg-red-600', 'animate-pulse');
+            container.classList.add('bg-white');
+        }
+
+    </script>
+
+
+
+
+
+
+
+
+
+    </body>
+
