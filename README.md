@@ -15,8 +15,8 @@ A simple, elegant countdown timer web application built with HTML, CSS (Tailwind
 
 ## Files Description 📁
 
-- **timer.html** - Main countdown timer with enhanced features (Stop/Reset buttons, color warnings)
-- **timer copy.html** - Duplicate of the main timer file
+- **timer.html** - Main countdown timer with enhanced features (Stop/Reset buttons, color warnings, iOS/Safari optimizations)
+- **timer copy.html** - Similar to timer.html but without iOS/Safari-specific CSS fixes
 - **test.html** - Basic countdown timer implementation
 - **timerCardIndex.html** - Alternative timer design with card-style UI
 
